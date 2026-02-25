@@ -99,3 +99,55 @@
    display diagnostic information in the terminal.
 
 ## Valgrind
+
+1. Edit `Makefile` and add a `#` character just after the `-g` option in
+   the definition of the `CFLAGS` variable. It should now look like this:
+
+       CFLAGS = -g #-fsanitize=address -fno-omit-frame-pointer
+
+2. Remove all executables with `make clean`. Then use make to recompile all
+   the programs used in the Address Sanitizer exercise above.
+
+3. Run `noleak` in Valgrind like this:
+
+      valgrind ./noleak
+
+   You should see the normal program output, preceded by and followed by
+   some diagnostics from Valgrind. Each line output by Valgrind is preceded
+   with a string that looks like this:
+
+       ==37460==
+
+   The number, which will vary on each invocation of Valgrind, is the
+   [process ID][pid] (PID).
+
+   Valgrind will display a summary of heap usage. Notice these messages,
+   in particular:
+
+       in use at exit: 0 bytes in 0 blocks
+
+       All heap blocks were freed -- no leaks are possible
+
+4. Now run `leak` in Valgrind. This time, the heap summary will include the
+   message
+
+       in use at exit: 100 bytes in 1 blocks
+
+   You will also see a 'leak summary' section, which include this message:
+
+       definitely lost: 100 bytes in 1 blocks
+
+5. Run `use_after` in Valgrind. You should see 'Invalid read of size 1'
+   reported, four times. If you look closely, you should also see Valgrind
+   noting that each attempt to read a byte takes place "inside a block of
+   size 100 free'd".
+
+6. Run `heap_over` in Valgrind. You should see 'Invalid write of size 4'
+   reported. You should also see Valgrind noting that this attempt took place
+   "after a block of size 40 alloc'd".
+
+After completing these tasks, compare what you've observed from using these
+two tools. Which of them gives more useful information?
+
+
+[pid]: https://en.wikipedia.org/wiki/Process_identifier
