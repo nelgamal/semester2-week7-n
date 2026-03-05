@@ -12,4 +12,6 @@
 
 `task6`: Dynamic analysis of C programs.
 
+`task7`: Debugging a more realistic C application.
+
 `advanced`: Ideas for more advanced things you can try.
